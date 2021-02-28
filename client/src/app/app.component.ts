@@ -1,4 +1,3 @@
-import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { User } from './_models/user';
 import { AccountService } from './_services/account.service';
@@ -9,14 +8,18 @@ import { AccountService } from './_services/account.service';
   styleUrls: ['./app.component.css']
 })
 
-export class AppComponent {
+export class AppComponent implements OnInit{
   title = 'The Dating App';
   users: any;
 
   constructor(private accountService: AccountService) {}
 
+  ngOnInit(): void {
+    this.setCurrnetUser();
+  }
+
   setCurrnetUser() {
-    const user: User = JSON.parse(localStorage.getItem('user') ?? '');
+    const user: User = JSON.parse(localStorage.getItem('user') ?? '{}');
     this.accountService.setCurrentUser(user);
   }
 
