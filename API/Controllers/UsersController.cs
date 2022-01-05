@@ -4,13 +4,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using API.Entities;
 using API.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
-    [ApiController]
-    [Route("[Controller]")]
-    public class UsersController : ControllerBase
+    [Authorize]
+    public class UsersController : BaseApiController
     {
         public UsersController(IUsersRepository _users)
         {
