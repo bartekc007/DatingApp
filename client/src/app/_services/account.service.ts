@@ -8,7 +8,7 @@ import { User } from '../_entities/entities';
   providedIn: 'root'
 })
 export class AccountService {
-  baseUrl = 'https://localhost:5001/'
+  baseUrl = 'https://localhost:5001/api/'
   private currentUserSource = new ReplaySubject<User>(1);
   currentUser$ = this.currentUserSource.asObservable();
 
