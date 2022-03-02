@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using API.DTOs;
 using API.Entities;
 using API.Repositories;
 using Microsoft.AspNetCore.Authorization;
@@ -9,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
-    //[Authorize]
+    [Authorize]
     public class UsersController : BaseApiController
     {
         public UsersController(IUsersRepository _users)
@@ -19,14 +20,14 @@ namespace API.Controllers
         private readonly IUsersRepository _usersRepository;
 
         [HttpGet]
-        public async Task<IEnumerable<AppUser>> GetAll()
+        public async Task<IEnumerable<MemberDto>> GetAll()
         {
             var result = await _usersRepository.GetAll();
             return result;
         }
 
         [HttpGet("{id}")]
-        public async Task<AppUser> GetById(int id)
+        public async Task<MemberDto> GetById(int id)
         {
             var result = await _usersRepository.GetById(id);
             return result;

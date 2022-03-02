@@ -30,9 +30,9 @@ namespace API.Repositories
         {
             using(IDbConnection connection = _context().Connection)
             {
-                var sQuery = @"Select * From users where username = @username";
+                var sQuery = @"Select * From appuser where username = @username";
                 var dynamicParameters = new DynamicParameters();
-                dynamicParameters.Add("username",_user.UserName);
+                dynamicParameters.Add("userName",_user.UserName);
                 var result = await connection.QuerySingleOrDefaultAsync<AppUser>(sQuery,dynamicParameters);
                 if(result == null)
                     return null;
@@ -65,18 +65,20 @@ namespace API.Repositories
             {
                 Username = registerDto.UserName,
                 PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(registerDto.Password)),
-                PasswordSalt = hmac.Key
+                PasswordSalt = hmac.Key,
+                DateOfBirth = registerDto.DateOfBirth,
+                KnownAs = registerDto.KnownAs
             };
 
             using(IDbConnection connection = _context().Connection)
             {
                 connection.Open();
-                string sQuery = @"Insert Into users (UserName, PasswordHash, PasswordSalt) values (@username, @passwordHash, @passwordSalt)";
+                string sQuery = @"Insert Into appuser (userName, passwordHash, passwordSalt, dateOfBirth, knownAs) values (@username, @passwordHash, @passwordSalt, @dateOfBirth, @knownAs)";
                 connection.Execute(sQuery,user);
 
-                sQuery = @"Select * From users where username = @username";
+                sQuery = @"Select * From appuser where username = @username";
                 var dynamicParameters = new DynamicParameters();
-                dynamicParameters.Add("username",user.Username);
+                dynamicParameters.Add("userName",user.Username);
                 var result = await connection.QuerySingleOrDefaultAsync<AppUser>(sQuery,dynamicParameters);
                 return new UserDto
                 {
@@ -93,9 +95,9 @@ namespace API.Repositories
                 connection.Open();
 
                 var dynamicParameters = new DynamicParameters();
-                dynamicParameters.Add("username",username);
+                dynamicParameters.Add("userName",username);
                 
-                string sQuery = $@"Select * from users where username = @username";
+                string sQuery = $@"Select * from appUser where username = @username";
                 var user = await connection.QueryAsync(sQuery,dynamicParameters);
                 return user.Count() >0;
             }

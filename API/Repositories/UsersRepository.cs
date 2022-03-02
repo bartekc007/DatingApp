@@ -4,6 +4,7 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using API.Data;
+using API.DTOs;
 using API.Entities;
 using Dapper;
 
@@ -11,30 +12,35 @@ namespace API.Repositories
 {
     public interface IUsersRepository
     {
-        public Task<IEnumerable<AppUser>> GetAll();
-        public Task<AppUser> GetById(int id);
+        public Task<IEnumerable<MemberDto>> GetAll();
+        public Task<MemberDto> GetById(int id);
     }
     public class UsersRepository : RepositoryBase, IUsersRepository
     {
         public UsersRepository(Func<DbConnectionFactory> factory) :base(factory) {}
 
-        public async Task<IEnumerable<AppUser>> GetAll()
+        public async Task<IEnumerable<MemberDto>> GetAll()
         {
              using(IDbConnection connection = _context().Connection)
             {
                 connection.Open();
-                string sQuery = @"SELECT * FROM users;";
-                return await connection.QueryAsync<AppUser>(sQuery);
+                string sQuery = @"SELECT * FROM vMember;";
+                return await connection.QueryAsync<MemberDto>(sQuery);
             }
         }
 
-        public async Task<AppUser> GetById(int id)
+        public async Task<MemberDto> GetById(int id)
         {
             using(IDbConnection connection = _context().Connection)
             {
                 connection.Open();
-                string sQuery = @"SELECT * FROM users WHERE Id=@Id;";
-                return await connection.QueryFirstOrDefaultAsync<AppUser>(sQuery, new { Id = id });
+                string sQuery = @"SELECT * FROM vMember WHERE Id=@Id;";
+                var user = await connection.QueryFirstOrDefaultAsync<MemberDto>(sQuery, new { Id = id });
+                
+                sQuery = @"SELECT * FROM vPhoto WHERE AppUserId=@Id;";
+                user.Photos = (await connection.QueryAsync<PhotoDto>(sQuery, new {Id = id})).ToArray();
+                
+                return user;
             }
         }
     }
