@@ -30,10 +30,10 @@ namespace API.Repositories
         {
             using(IDbConnection connection = _context().Connection)
             {
-                var sQuery = @"Select * From appuser where username = @username";
+                var sQuery = @"Select appUserId AS Id, userName AS Username, passwordHash AS PasswordHash, passwordSalt AS PasswordSalt From appuser where username = @username";
                 var dynamicParameters = new DynamicParameters();
                 dynamicParameters.Add("userName",_user.UserName);
-                var result = await connection.QuerySingleOrDefaultAsync<AppUser>(sQuery,dynamicParameters);
+                var result = await connection.QueryFirstOrDefaultAsync<AppUser>(sQuery,dynamicParameters);
                 if(result == null)
                     return null;
 
@@ -48,7 +48,8 @@ namespace API.Repositories
                 return new UserDto
                 {
                     Username = result.Username,
-                    Token = _tokenService.CreateToken(result)
+                    Token = _tokenService.CreateToken(result),
+                    Id = result.Id
                 };
             }
         }
@@ -76,14 +77,15 @@ namespace API.Repositories
                 string sQuery = @"Insert Into appuser (userName, passwordHash, passwordSalt, dateOfBirth, knownAs) values (@username, @passwordHash, @passwordSalt, @dateOfBirth, @knownAs)";
                 connection.Execute(sQuery,user);
 
-                sQuery = @"Select * From appuser where username = @username";
+                sQuery = @"Select appUserId AS Id, userName AS Username From appuser where username = @username";
                 var dynamicParameters = new DynamicParameters();
                 dynamicParameters.Add("userName",user.Username);
                 var result = await connection.QuerySingleOrDefaultAsync<AppUser>(sQuery,dynamicParameters);
                 return new UserDto
                 {
                     Username = result.Username,
-                    Token = _tokenService.CreateToken(result)
+                    Token = _tokenService.CreateToken(result),
+                    Id = result.Id
                 };
             }
         }

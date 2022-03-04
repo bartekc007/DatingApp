@@ -23,6 +23,7 @@ import { JwtInterceptor } from './_interceptors/jwt.interceptor';
 import { DatePipe } from '@angular/common';
 import { TabsModule } from 'ngx-bootstrap/tabs';
 import { NgxGalleryModule } from '@kolkov/ngx-gallery';
+import { MemberEditComponent } from './_components/member-edit/member-edit.component';
 
 @NgModule({
   declarations: [
@@ -37,7 +38,8 @@ import { NgxGalleryModule } from '@kolkov/ngx-gallery';
     TestErrorsComponent,
     NotFoundComponent,
     ServerErrorComponent,
-    MemberCardComponent
+    MemberCardComponent,
+    MemberEditComponent
   ],
   imports: [
     BrowserModule,

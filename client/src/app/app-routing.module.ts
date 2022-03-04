@@ -6,9 +6,11 @@ import { TestErrorsComponent } from './errors/test-errors/test-errors.component'
 import { HomeComponent } from './_components/home/home.component';
 import { ListsComponent } from './_components/lists/lists.component';
 import { MemberDetailsComponent } from './_components/member-details/member-details.component';
+import { MemberEditComponent } from './_components/member-edit/member-edit.component';
 import { MemberListComponent } from './_components/member-list/member-list.component';
 import { MessagesComponent } from './_components/messages/messages.component';
 import { AuthGuard } from './_guards/auth.guard';
+import { PreventUnsavedChangesGuard } from './_guards/prevent-unsaved-changes.guard';
 
 const routes: Routes = [
   {path: '', component: HomeComponent},
@@ -19,6 +21,7 @@ const routes: Routes = [
     children: [
       {path: 'members', component: MemberListComponent},
       {path: 'members/:id', component: MemberDetailsComponent},
+      {path: 'member/edit', component: MemberEditComponent, canDeactivate: [PreventUnsavedChangesGuard]},
       {path: 'lists', component: ListsComponent},
       {path: 'messages', component: MessagesComponent},
     ]

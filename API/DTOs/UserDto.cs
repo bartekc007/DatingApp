@@ -9,6 +9,7 @@ namespace API.DTOs
     {
         public string Username { get; set; }
         public string Token { get; set; }
+        public int Id { get; set; }
     }
 
     public class MemberDto

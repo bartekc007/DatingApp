@@ -18,4 +18,8 @@ export class MembersService {
   getById(id: number) {
     return this.$http.get<MemberDto>(this.baseUrl + 'users/' + id)
   }
+
+  update(member: MemberDto) {
+    return this.$http.put(this.baseUrl + '/users',member);
+  }
 }
