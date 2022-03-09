@@ -1,14 +1,13 @@
-
 <div class="row" *ngIf="member">
     <div class="col-4">
-        <h1>Your Profile</h1>
+        <h1>Your profile</h1>
     </div>
     <div class="col-8">
         <div class="alert alert-info" *ngIf="editForm.dirty">
-            <strong>Information: </strong> You have made changes. Any unsaved changes will be lost
+            <strong>Information: </strong> You have made changes.  Any unsaved changes will be lost
         </div>
     </div>
-    <div class="col-4 mt-2">
+    <div class="col-4">
         <div class="card">
             <img src="{{member.photoUrl || './assets/user.png'}}" alt="{{member.knownAs}}" 
                 class="card-img-top img-thumbnail">
@@ -31,7 +30,7 @@
                 </div>
             </div>
             <div class="card-footer">
-                <button form="editForm" class="btn btn-success btn-block" [disabled]="!editForm.dirty">Save Changes</button>
+                <button [disabled]="!editForm.dirty" form="editForm" type="submit" class="btn btn-success btn-block">Save Changes</button>
             </div>
         </div>
     </div>

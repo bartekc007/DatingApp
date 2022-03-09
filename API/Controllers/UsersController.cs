@@ -43,9 +43,9 @@ namespace API.Controllers
             var username = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (!string.IsNullOrEmpty(username))
             {
-                var user = await _usersRepository.GetByUserName(username);
-                _mapper.Map(member, user);
-                if(await _usersRepository.Update(member)==1)
+                var user = AppUser.CopyFrom(member);
+
+                if(await _usersRepository.Update(user)==1)
                     return NoContent();
                 return BadRequest();
             }

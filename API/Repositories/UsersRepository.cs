@@ -15,7 +15,7 @@ namespace API.Repositories
         public Task<IEnumerable<MemberDto>> GetAll();
         public Task<MemberDto> GetById(int id);
         public Task<MemberDto> GetByUserName(string username);
-        public Task<int> Update(MemberDto member);
+        public Task<int> Update(AppUser member);
     }
     public class UsersRepository : RepositoryBase, IUsersRepository
     {
@@ -61,22 +61,24 @@ namespace API.Repositories
             }
         }
 
-        public async Task<int> Update(MemberDto user)
+        public async Task<int> Update(AppUser user)
         {
             using (IDbConnection connection = _context().Connection)
             {
                 connection.Open();
-                string sQuery = $"UPDATE appUser SET" +
-                                "userName=@UserName, " +
-                                "dateOfBirth=@dateOfBirth, " +
-                                "knownAs=@KnownUs, " +
-                                "gender=@Gender, " +
-                                "introduction=@Introduction, " +
-                                "lookingFor=@LookingFor, " +
-                                "interests@Interests, " +
-                                "city=@City, " +
-                                "country=@Country " +
-                                "WHERE appUserId=@Id";
+                string sQuery = @"
+UPDATE appUser 
+SET
+userName = @UserName,
+dateOfBirth = @dateOfBirth,
+knownAs = @knownAs,
+gender = @Gender,
+introduction = @Introduction,
+lookingFor = @LookingFor,
+interests = @Interests,
+city = @City,
+country = @Country 
+WHERE appUserId = @Id;";
                 
                 var dynamicParameters = new DynamicParameters();
                 dynamicParameters.Add("userName",user.Username);
@@ -88,6 +90,7 @@ namespace API.Repositories
                 dynamicParameters.Add("interests",user.Interests);
                 dynamicParameters.Add("city",user.City);
                 dynamicParameters.Add("country",user.Country);
+                dynamicParameters.Add("Id",user.Id);
                 
                 return await connection.ExecuteAsync(sQuery,user);
             }

@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { ToastrModule, ToastrService } from 'ngx-toastr';
 import { TabsModule} from 'ngx-bootstrap/tabs';
+import { NgxSpinnerModule } from "ngx-spinner";
 
 @NgModule({
   declarations: [],
@@ -12,11 +13,13 @@ import { TabsModule} from 'ngx-bootstrap/tabs';
     ToastrModule.forRoot({
       positionClass: 'toast-top-right'
     }),
-    TabsModule.forRoot()
+    TabsModule.forRoot(),
+    NgxSpinnerModule
   ],
   exports: [
     BsDropdownModule,
-    ToastrModule
+    ToastrModule,
+    NgxSpinnerModule
   ]
 
 })

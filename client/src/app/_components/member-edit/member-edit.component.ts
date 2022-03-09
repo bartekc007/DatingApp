@@ -36,6 +36,7 @@ export class MemberEditComponent implements OnInit {
   }
 
   updateMember() {
+    this.member.gender = 'female';
     this.memberService.update(this.member).subscribe(()=>{
       this.$toastr.success('Profifle updated Succesfully');
       this.editForm.reset(this.member);

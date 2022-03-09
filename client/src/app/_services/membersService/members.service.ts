@@ -20,6 +20,6 @@ export class MembersService {
   }
 
   update(member: MemberDto) {
-    return this.$http.put(this.baseUrl + '/users',member);
+    return this.$http.put(this.baseUrl + 'users',member);
   }
 }
