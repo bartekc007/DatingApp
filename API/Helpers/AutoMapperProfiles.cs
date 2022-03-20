@@ -9,11 +9,11 @@ public class AutoMapperProfiles: Profile
     public AutoMapperProfiles()
     {
         // User
-        CreateMap<AppUser, MemberDto>();
-        CreateMap<MemberDto, AppUser>();
+        CreateMap<AppUser, VMember>();
+        CreateMap<VMember, AppUser>();
         
         // Photo
-        CreateMap<Photo, PhotoDto>();
+        CreateMap<Photo, VPhoto>();
         
     }
 }

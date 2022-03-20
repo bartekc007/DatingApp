@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -7,16 +8,16 @@ namespace API.Errors
 {
     public class ApiException
     {
-        public ApiException(int statusCode, string message = null, string details = null)
+        public ApiException([NotNull]int statusCode, string? message = null, string? details = null)
         {
-            this.statusCode = statusCode;
+            StatusCode = statusCode;
             Message = message;
             Details = details;
         }
 
-        public int statusCode { get; set; }
-        public string Message { get; set; }
-        public string Details { get; set; }
+        public int StatusCode { get; set; }
+        public string? Message { get; set; }
+        public string? Details { get; set; }
         
     }
 }

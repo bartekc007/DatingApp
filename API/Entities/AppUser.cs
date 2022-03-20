@@ -7,9 +7,8 @@ using API.DTOs;
 
 namespace API.Entities
 {
-    public class AppUser
+    public class AppUser : EntityBase
     {
-        public int Id { get; set; }
         [Required]
         [MaxLength(40)]
         public string Username { get; set; }
@@ -29,20 +28,20 @@ namespace API.Entities
         public string Country { get; set; }
         public ICollection<Photo> Photos { get; set; }
 
-        public static AppUser CopyFrom(MemberDto member)
+        public static AppUser CopyFrom(VMember vMember)
         {
             var appUser = new AppUser
             {
-                Id = member.Id,
-                Username = member.Username,
-                DateOfBirth = member.DateOfBirth,
-                KnownAs = member.KnownAs,
-                Gender = member.Gender,
-                Introduction = member.Introduction,
-                LookingFor = member.LookingFor,
-                Interests = member.Interests,
-                City = member.City,
-                Country = member.Country
+                Id = vMember.Id,
+                Username = vMember.Username,
+                DateOfBirth = vMember.DateOfBirth,
+                KnownAs = vMember.KnownAs,
+                Gender = vMember.Gender,
+                Introduction = vMember.Introduction,
+                LookingFor = vMember.LookingFor,
+                Interests = vMember.Interests,
+                City = vMember.City,
+                Country = vMember.Country
             };
 
             return appUser;

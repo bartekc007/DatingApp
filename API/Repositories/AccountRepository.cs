@@ -30,7 +30,7 @@ namespace API.Repositories
         {
             using(IDbConnection connection = _context().Connection)
             {
-                var sQuery = @"Select appUserId AS Id, userName AS Username, passwordHash AS PasswordHash, passwordSalt AS PasswordSalt From appuser where username = @username";
+                var sQuery = @"Select Id, Username, PasswordHash, PasswordSalt From AppUser where Username = @username";
                 var dynamicParameters = new DynamicParameters();
                 dynamicParameters.Add("userName",_user.UserName);
                 var result = await connection.QueryFirstOrDefaultAsync<AppUser>(sQuery,dynamicParameters);
@@ -74,10 +74,10 @@ namespace API.Repositories
             using(IDbConnection connection = _context().Connection)
             {
                 connection.Open();
-                string sQuery = @"Insert Into appuser (userName, passwordHash, passwordSalt, dateOfBirth, knownAs) values (@username, @passwordHash, @passwordSalt, @dateOfBirth, @knownAs)";
+                string sQuery = @"Insert Into appuser (Username, PasswordHash, PasswordSalt, DateOfBirth, KnownAs) values (@username, @passwordHash, @passwordSalt, @dateOfBirth, @knownAs)";
                 connection.Execute(sQuery,user);
 
-                sQuery = @"Select appUserId AS Id, userName AS Username From appuser where username = @username";
+                sQuery = @"Select Id, Username From AppUser where username = @username";
                 var dynamicParameters = new DynamicParameters();
                 dynamicParameters.Add("userName",user.Username);
                 var result = await connection.QuerySingleOrDefaultAsync<AppUser>(sQuery,dynamicParameters);
@@ -97,9 +97,9 @@ namespace API.Repositories
                 connection.Open();
 
                 var dynamicParameters = new DynamicParameters();
-                dynamicParameters.Add("userName",username);
+                dynamicParameters.Add("username",username);
                 
-                string sQuery = $@"Select * from appUser where username = @username";
+                string sQuery = $@"Select * from AppUser where Username = @username";
                 var user = await connection.QueryAsync(sQuery,dynamicParameters);
                 return user.Count() >0;
             }

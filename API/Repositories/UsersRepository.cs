@@ -10,60 +10,51 @@ using Dapper;
 
 namespace API.Repositories
 {
-    public interface IUsersRepository
+    public interface IUsersRepository : IGenericRepositoryBase<AppUser,VMember>
     {
-        public Task<IEnumerable<MemberDto>> GetAll();
-        public Task<MemberDto> GetById(int id);
-        public Task<MemberDto> GetByUserName(string username);
-        public Task<int> Update(AppUser member);
+        // public Task<IEnumerable<VMember>> GetAll(IDbConnection connection);
+        // public Task<VMember> GetById(IDbConnection connection, int id);
+        public Task<VMember> GetByUserName(IDbConnection connection, string username);
+        public Task<int> Update(IDbConnection connection, AppUser member);
     }
-    public class UsersRepository : RepositoryBase, IUsersRepository
+    public class UsersRepository : GenericRepositoryBase<AppUser,VMember>, IUsersRepository
     {
-        public UsersRepository(Func<DbConnectionFactory> factory) :base(factory) {}
-
-        public async Task<IEnumerable<MemberDto>> GetAll()
+        public override async Task<VMember> GetById(IDbConnection connection, int id)
         {
-             using(IDbConnection connection = _context().Connection)
+            if (connection.State == ConnectionState.Open)
             {
-                connection.Open();
-                string sQuery = @"SELECT * FROM vMember;";
-                return await connection.QueryAsync<MemberDto>(sQuery);
-            }
-        }
-
-        public async Task<MemberDto> GetById(int id)
-        {
-            using(IDbConnection connection = _context().Connection)
-            {
-                connection.Open();
                 string sQuery = @"SELECT * FROM vMember WHERE Id=@Id;";
-                var user = await connection.QueryFirstOrDefaultAsync<MemberDto>(sQuery, new { Id = id });
-                
+                var user = await connection.QueryFirstOrDefaultAsync<VMember>(sQuery, new { Id = id });
+            
                 sQuery = @"SELECT * FROM vPhoto WHERE AppUserId=@Id;";
-                user.Photos = (await connection.QueryAsync<PhotoDto>(sQuery, new {Id = id})).ToArray();
-                
+                user.Photos = (await connection.QueryAsync<VPhoto>(sQuery, new {Id = id})).ToArray();
+            
                 return user;
             }
+        
+            return null;
         }
         
-        public async Task<MemberDto> GetByUserName(string username)
+        public async Task<VMember> GetByUserName(IDbConnection connection, string username)
         {
-            using(IDbConnection connection = _context().Connection)
+            if (connection.State == ConnectionState.Open)
             {
-                connection.Open();
                 string sQuery = @"SELECT * FROM vMember WHERE username=@Username;";
-                var user = await connection.QueryFirstOrDefaultAsync<MemberDto>(sQuery, new { Username = username });
-                
+                var user = await connection.QueryFirstOrDefaultAsync<VMember>(sQuery, new {Username = username});
+
                 sQuery = @"SELECT * FROM vPhoto WHERE AppUserId=@Id;";
-                user.Photos = (await connection.QueryAsync<PhotoDto>(sQuery, new {Id = user.Id})).ToArray();
-                
+                user.Photos = (await connection.QueryAsync<VPhoto>(sQuery, new {Id = user.Id})).ToArray();
+
                 return user;
             }
+
+            return null;
         }
 
-        public async Task<int> Update(AppUser user)
+        public async Task<int> Update(IDbConnection connection, AppUser user)
         {
-            using (IDbConnection connection = _context().Connection)
+
+            if (connection.State == ConnectionState.Open)
             {
                 connection.Open();
                 string sQuery = @"
@@ -79,21 +70,23 @@ interests = @Interests,
 city = @City,
 country = @Country 
 WHERE appUserId = @Id;";
-                
+
                 var dynamicParameters = new DynamicParameters();
-                dynamicParameters.Add("userName",user.Username);
-                dynamicParameters.Add("dateOfBirth",user.DateOfBirth);
-                dynamicParameters.Add("knownAs",user.KnownAs);
-                dynamicParameters.Add("gender",user.Gender);
-                dynamicParameters.Add("introduction",user.Introduction);
-                dynamicParameters.Add("lookingFor",user.LookingFor);
-                dynamicParameters.Add("interests",user.Interests);
-                dynamicParameters.Add("city",user.City);
-                dynamicParameters.Add("country",user.Country);
-                dynamicParameters.Add("Id",user.Id);
-                
-                return await connection.ExecuteAsync(sQuery,user);
+                dynamicParameters.Add("userName", user.Username);
+                dynamicParameters.Add("dateOfBirth", user.DateOfBirth);
+                dynamicParameters.Add("knownAs", user.KnownAs);
+                dynamicParameters.Add("gender", user.Gender);
+                dynamicParameters.Add("introduction", user.Introduction);
+                dynamicParameters.Add("lookingFor", user.LookingFor);
+                dynamicParameters.Add("interests", user.Interests);
+                dynamicParameters.Add("city", user.City);
+                dynamicParameters.Add("country", user.Country);
+                dynamicParameters.Add("Id", user.Id);
+
+                return await connection.ExecuteAsync(sQuery, user);
             }
+
+            return 0;
         }
     }
 }

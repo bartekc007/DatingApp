@@ -1,28 +1,28 @@
 Create Database DatingAppData;
 
-Create table if NOT Exists appUser (
-    appUserId BIGSERIAL PRIMARY KEY ,
-    userName varchar(40) NOT NULL ,
-    passwordHash bytea NOT NULL ,
-    passwordSalt bytea NOT NULL ,
-    dateOfBirth DATE NOT NULL ,
-    knownAs varchar NOT NULL ,
-    created TIMESTAMP DEFAULT CURRENT_TIMESTAMP ,
-    lastActive TIMESTAMP DEFAULT CURRENT_TIMESTAMP ,
-    gender varchar ,
-    introduction varchar(255) ,
-    lookingFor varchar ,
-    interests varchar ,
-    city varchar ,
-    country varchar 
+Create table if NOT Exists AppUser (
+    Id BIGSERIAL PRIMARY KEY ,
+    Username varchar(40) NOT NULL ,
+    PasswordHash bytea NOT NULL ,
+    PasswordSalt bytea NOT NULL ,
+    DateOfBirth DATE NOT NULL ,
+    KnownAs varchar NOT NULL ,
+    Created TIMESTAMP DEFAULT CURRENT_TIMESTAMP ,
+    LastActive TIMESTAMP DEFAULT CURRENT_TIMESTAMP ,
+    Gender varchar ,
+    Introduction varchar(255) ,
+    LookingFor varchar ,
+    Interests varchar ,
+    City varchar ,
+    Country varchar 
 );
 
-Create table if not exists photo(
-    photoId BIGSERIAL PRIMARY KEY ,
-    url varchar ,
-    isMain boolean DEFAULT FALSE ,
-    publicId varchar ,
-    appUserId int ,
+Create table if not exists Photo(
+    Id BIGSERIAL PRIMARY KEY ,
+    Url varchar ,
+    IsMain boolean DEFAULT FALSE ,
+    PublicId varchar ,
+    AppUserId int ,
 
     CONSTRAINT fk_appUser
         FOREIGN KEY(appUserId)
@@ -31,30 +31,30 @@ Create table if not exists photo(
 
 Create or Replace View vMember
 AS
-SELECT U.appUserId as Id, 
-       U.username, 
-       U.dateOfBirth, 
-       U.knownAs, 
-       U.created, 
-       U.lastActive,
-       U.gender, 
-       U.introduction, 
-       U.lookingFor, 
-       U.interests, 
-       U.city, 
-       U.country, 
-       P.url as photoUrl
-FROM  appUser U
+SELECT U.Id, 
+       U.Username, 
+       U.DateOfBirth, 
+       U.KnownAs, 
+       U.Created, 
+       U.LastActive,
+       U.Gender, 
+       U.Introduction, 
+       U.LookingFor, 
+       U.Interests, 
+       U.City, 
+       U.Country, 
+       P.Url as PhotoUrl
+FROM  AppUser U
 INNER JOIN
-    photo P on U.appUserId = P.appUserId
-where P.isMain = true;
+    Photo P on U.Id = P.Id
+where P.IsMain = true;
 
 Create or Replace View vPhoto
 AS 
-Select photoId AS Id,
-       url,
-       isMain,
-       appUserId
-From photo;
+Select Id,
+       Url,
+       IsMain,
+       AppUserId
+From Photo;
 
 

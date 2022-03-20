@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using API.Entities;
 
 namespace API.DTOs
 {
@@ -12,9 +13,8 @@ namespace API.DTOs
         public int Id { get; set; }
     }
 
-    public class MemberDto
+    public class VMember: DtoBase
     {
-        public int Id { get; set; }
         public string Username { get; set; }
         public string PhotoUrl { get; set; }
         public DateTime DateOfBirth { get; set; }
@@ -27,6 +27,6 @@ namespace API.DTOs
         public string Interests { get; set; }
         public string City { get; set; }
         public string Country { get; set; }
-        public ICollection<PhotoDto> Photos { get; set; }
+        public ICollection<VPhoto> Photos { get; set; }
     }
 }

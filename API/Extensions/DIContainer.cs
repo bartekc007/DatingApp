@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using API.BusinessLogics;
 using API.Data;
 using API.Repositories;
 using API.Services;
@@ -36,6 +37,9 @@ namespace API.Extensions
             // Repositories
             builder.RegisterType<UsersRepository>().As<IUsersRepository>().InstancePerLifetimeScope();
             builder.RegisterType<AccountRepository>().As<IAccountRepository>().InstancePerLifetimeScope();
+
+            // BusinessLogics
+            builder.RegisterType<UsersBusinessLogic>().As<IUserBusinessLogic>().InstancePerLifetimeScope();
         }
     }
 }
