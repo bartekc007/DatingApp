@@ -31,15 +31,18 @@ namespace API.Extensions
                 return () => cc.ResolveNamed<DbConnectionFactory>(nameof(DbConnectionFactory));
             });
 
-            // Token Service
+            // Services
             builder.RegisterType<TokenService>().As<ITokenService>().InstancePerLifetimeScope();
+            builder.RegisterType<PhotoService>().As<IPhotoService>().InstancePerLifetimeScope();
 
             // Repositories
             builder.RegisterType<UsersRepository>().As<IUsersRepository>().InstancePerLifetimeScope();
             builder.RegisterType<AccountRepository>().As<IAccountRepository>().InstancePerLifetimeScope();
+            builder.RegisterType<PhotosRepository>().As<IPhotosRepository>().InstancePerLifetimeScope();
 
             // BusinessLogics
             builder.RegisterType<UsersBusinessLogic>().As<IUserBusinessLogic>().InstancePerLifetimeScope();
+            builder.RegisterType<PhotosBusinessLogic>().As<IPhotosBusinessLogic>().InstancePerLifetimeScope();
         }
     }
 }

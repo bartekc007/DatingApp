@@ -2,6 +2,7 @@ export interface User {
     username: string;
     id: number;
     token: string;
+    photoUrl: string;
 }
 
 export interface MemberDto {

@@ -16,9 +16,21 @@ namespace API.Repositories
         // public Task<VMember> GetById(IDbConnection connection, int id);
         public Task<VMember> GetByUserName(IDbConnection connection, string username);
         public Task<int> Update(IDbConnection connection, AppUser member);
+        public Task<int> DeletePhoto(IDbConnection connection,int photoId);
     }
     public class UsersRepository : GenericRepositoryBase<AppUser,VMember>, IUsersRepository
     {
+        public async Task<int> DeletePhoto(IDbConnection connection, int photoId)
+        {
+            if (connection.State == ConnectionState.Open)
+            {
+                string sQuery = @"DELETE FROM vPhoto WHERE Id=@Id;";
+                var result = await connection.QueryAsync(sQuery, new {Id = photoId});
+            }
+        
+            return 0;
+        }
+
         public override async Task<VMember> GetById(IDbConnection connection, int id)
         {
             if (connection.State == ConnectionState.Open)
@@ -56,7 +68,6 @@ namespace API.Repositories
 
             if (connection.State == ConnectionState.Open)
             {
-                connection.Open();
                 string sQuery = @"
 UPDATE appUser 
 SET
@@ -69,7 +80,7 @@ lookingFor = @LookingFor,
 interests = @Interests,
 city = @City,
 country = @Country 
-WHERE appUserId = @Id;";
+WHERE Id = @Id;";
 
                 var dynamicParameters = new DynamicParameters();
                 dynamicParameters.Add("userName", user.Username);

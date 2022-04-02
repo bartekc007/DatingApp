@@ -1,3 +1,9 @@
+-- Create docker network
+
+-- #docker network create db   
+-- #docker run --name db -p 5432:5432 --network=db -v "$PWD:/var/lib/postgresql/data" -e POSTGRES_PASSWORD=password -d postgres  
+
+
 Create Database DatingAppData;
 
 Create table if NOT Exists AppUser (

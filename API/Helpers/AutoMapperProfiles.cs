@@ -14,6 +14,7 @@ public class AutoMapperProfiles: Profile
         
         // Photo
         CreateMap<Photo, VPhoto>();
+        CreateMap<VPhoto, Photo>();
         
     }
 }

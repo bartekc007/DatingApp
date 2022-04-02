@@ -37,6 +37,12 @@ namespace API.Repositories
                 if(result == null)
                     return null;
 
+                sQuery = @"Select * FROM Photo Where appUserId=@AppUserId AND isMain=@IsMain;";
+                dynamicParameters = new DynamicParameters();
+                dynamicParameters.Add("AppUserId",result.Id);
+                dynamicParameters.Add("IsMain",true);
+                var photo = await connection.QueryFirstOrDefaultAsync<VPhoto>(sQuery,new {AppUserId = result.Id, IsMain=true});
+
                 using var hmac = new HMACSHA512(result.PasswordSalt);
                 var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(_user.Password));
 
@@ -49,7 +55,8 @@ namespace API.Repositories
                 {
                     Username = result.Username,
                     Token = _tokenService.CreateToken(result),
-                    Id = result.Id
+                    Id = result.Id,
+                    PhotoUrl = photo != null ? photo.Url : string.Empty
                 };
             }
         }
@@ -74,8 +81,8 @@ namespace API.Repositories
             using(IDbConnection connection = _context().Connection)
             {
                 connection.Open();
-                string sQuery = @"Insert Into appuser (Username, PasswordHash, PasswordSalt, DateOfBirth, KnownAs) values (@username, @passwordHash, @passwordSalt, @dateOfBirth, @knownAs)";
-                connection.Execute(sQuery,user);
+                string sQuery = @"Insert Into appuser (Username, PasswordHash, PasswordSalt, DateOfBirth, KnownAs) values (@username, @passwordHash, @passwordSalt, @dateOfBirth, @knownAs) RETURNING Id,Username";
+                var result2 = await connection.QuerySingleAsync<AppUser>(sQuery,user);
 
                 sQuery = @"Select Id, Username From AppUser where username = @username";
                 var dynamicParameters = new DynamicParameters();
